@@ -9,7 +9,7 @@ from pytheus.exposition import generate_metrics
 
 from ollama_monitor import __version__
 from ollama_monitor.etc.consts import MINIMUM_VERIFIED_VERSION, MAXIMUM_VERIFIED_VERSION, CLIENT, LOGGER
-from ollama_monitor.router import status_router, transparent_proxy_synchronous
+from ollama_monitor.router import model_router, status_router, transparent_proxy_synchronous
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -52,6 +52,10 @@ def create_app():
         },
         openapi_tags=[
             {
+                'name': 'Model',
+                'description': 'Endpoints for managing Ollama models.',
+            },
+            {
                 'name': 'Status',
                 'description': 'Endpoints for checking the status and version of the Ollama server.',
             }
@@ -62,6 +66,7 @@ def create_app():
 
     app.add_middleware(PytheusMiddlewareASGI)
 
+    app.include_router(model_router)
     app.include_router(status_router)
 
     @app.get('', tags=['Status'])
