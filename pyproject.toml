@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ollama-monitor"
+authors = [
+  { name="Firefox2100", email="wangyunze16@gmail.com" },
+]
+description = "Ollama Monitor: a transparent proxy to monitor all ollama requests."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "fastapi~=0.136.1",
+    "httpx~=0.28.1",
+    "pydantic~=2.13.4",
+    "pytheus~=0.6.1",
+    "semver~=3.0.4",
+]
+dynamic = [
+    "version"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest~=9.0.3",
+    "pytest-asyncio~=1.3.0",
+    "pytest-cov~=7.1.0",
+    "pylint~=4.0.5",
+    "uvicorn~=0.47.0",
+]
+uvicorn = [
+    "uvicorn~=0.47.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Firefox2100/ollama-monitor"
+Repository = "https://github.com/Firefox2100/ollama-monitor.git"
+Issues = "https://github.com/Firefox2100/ollama-monitor/issues"
+
+[project.scripts]
+ollama-monitor = "ollama_monitor.__main__:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "ollama_monitor.__version__"}
