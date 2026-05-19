@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 
-from .utils import transparent_proxy_synchronous
+from .utils import transparent_proxy_synchronous, transparent_proxy_stream
 
 
 model_router = APIRouter(
@@ -10,7 +10,7 @@ model_router = APIRouter(
 
 @model_router.post('/api/pull')
 async def ollama_api_pull(request: Request):
-    return await transparent_proxy_synchronous(
+    return await transparent_proxy_stream(
         request=request,
         ollama_path='/api/pull',
     )
@@ -18,7 +18,7 @@ async def ollama_api_pull(request: Request):
 
 @model_router.post('/api/push')
 async def ollama_api_push(request: Request):
-    return await transparent_proxy_synchronous(
+    return await transparent_proxy_stream(
         request=request,
         ollama_path='/api/push',
     )
@@ -77,7 +77,7 @@ async def ollama_api_delete_key(request: Request,
 
 @model_router.post('/api/create')
 async def ollama_api_create(request: Request):
-    return await transparent_proxy_synchronous(
+    return await transparent_proxy_stream(
         request=request,
         ollama_path='/api/create',
     )

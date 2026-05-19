@@ -1,4 +1,3 @@
-import sys
 from contextlib import asynccontextmanager
 import semver
 from fastapi import FastAPI, Request
@@ -9,10 +8,11 @@ from pytheus.exposition import generate_metrics
 
 from ollama_monitor import __version__
 from ollama_monitor.etc.consts import MINIMUM_VERIFIED_VERSION, MAXIMUM_VERIFIED_VERSION, CLIENT, LOGGER
-from ollama_monitor.router import model_router, status_router, transparent_proxy_synchronous
+from ollama_monitor.router import experimental_router, inference_router, model_router, status_router, \
+    anthropic_compatibility_router, openai_compatibility_router, transparent_proxy_synchronous
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_):
     try:
         version_response = await CLIENT.get('/api/version')
         version_response.raise_for_status()
@@ -52,12 +52,29 @@ def create_app():
         },
         openapi_tags=[
             {
+                'name': 'Experimental',
+                'description': 'Endpoints that are not yet officially released by Ollama. They are subject '
+                               'to change without notice, thus might break with this proxy server too.'
+            },
+            {
+                'name': 'Inference',
+                'description': 'Endpoints for interacting with Ollama inference.',
+            },
+            {
                 'name': 'Model',
                 'description': 'Endpoints for managing Ollama models.',
             },
             {
                 'name': 'Status',
                 'description': 'Endpoints for checking the status and version of the Ollama server.',
+            },
+            {
+                'name': 'Anthropic Compatibility',
+                'description': 'Endpoints for compatibility with Anthropic API.'
+            },
+            {
+                'name': 'OpenAI Compatibility',
+                'description': 'Endpoints for compatibility with OpenAI API.'
             }
         ],
         lifespan=lifespan,
@@ -66,8 +83,12 @@ def create_app():
 
     app.add_middleware(PytheusMiddlewareASGI)
 
+    app.include_router(experimental_router)
+    app.include_router(inference_router)
     app.include_router(model_router)
     app.include_router(status_router)
+    app.include_router(anthropic_compatibility_router)
+    app.include_router(openai_compatibility_router)
 
     @app.get('', tags=['Status'])
     @app.head('', tags=['Status'])
@@ -84,3 +105,6 @@ def create_app():
         return generate_metrics()
 
     return app
+
+
+app = create_app()

@@ -9,6 +9,8 @@ HOP_BY_HOP_HEADERS = {
     'te',
     'trailer',
     'transfer-encoding',
+    'content-encoding',
+    'content-length',
     'upgrade',
 }
 

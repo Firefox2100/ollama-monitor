@@ -96,4 +96,4 @@ CLIENT = AsyncClient(
 )
 
 MINIMUM_VERIFIED_VERSION = semver.Version.parse('0.23.3')
-MAXIMUM_VERIFIED_VERSION = semver.Version.parse('0.23.3')
+MAXIMUM_VERIFIED_VERSION = semver.Version.parse('0.24.0')

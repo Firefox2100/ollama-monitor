@@ -10,11 +10,10 @@ except (ImportError, ModuleNotFoundError):
     )
     sys.exit(1)
 
-from ollama_monitor.app import create_app
+from ollama_monitor.app import app
 
 
 def main():
-    app = create_app()
     host = str(os.getenv('HOST', '0.0.0.0'))
     port = int(os.getenv('OM_PORT', 11435))
 
